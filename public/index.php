@@ -46,6 +46,29 @@ $app->post('/register', function (Request $request, Response $response, array $a
 
     return $response->withStatus($status);
 });
+
+
+$app->post('/contact', function (Request $request, Response $response, array $args) {
+    $data = $request->getParsedBody();
+
+    $email = $data['email'];
+    $name = $data['name'];
+    $subject = $data['subject'];
+    $content = $data['content'];
+
+    $status = 200;
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+  		$response->getBody()->write("Invalid email address format");
+  		$status = 400;
+	} else {
+		$sql = "INSERT INTO `contact` (`id`, `email`, `name`, `subject`, `content`) VALUES (NULL, '$email', '$name', '$subject', '$content');"
+		getConnection()->query($sql);
+	}
+
+    return $response->withStatus($status);
+});
+
 $app->run();
 
 	# getConnection
